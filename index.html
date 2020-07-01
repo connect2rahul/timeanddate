@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .dateWrapper{
+            display: flex;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .dateWrapper span{
+            margin-right: 5px;
+        }
+        .clockWrapper{
+            width: 600px;
+            height: 100px;
+            display: flex;
+            border: 1px solid #000;
+        }
+        .clockWrapper div{
+            width: 200px;
+            border-right: 1px solid #000;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            background: rgb(243, 243, 243);
+        }
+        .clockWrapper div:last-child{
+            border-right: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="clock">
+        <div class="dateWrapper">
+            <span id="date"></span>
+            <span id="month"></span>
+            <span id="day"></span>
+            <span id="year"></span>
+        </div>
+        <div class="clockWrapper">
+            <div class="hour">
+                <span id="hour"></span>
+            </div>
+            <div class="minute">
+                <span id="min"></span>
+            </div>
+            <div class="second">
+                <span id="sec"></span>
+            </div>
+        </div>
+    </div>
+    <script>
+        let date = new Date();
+        let hour,min,sec,dat,dateNo,month,year;
+        var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const nth = function(d) {
+            if (d > 3 && d < 21) return 'th';
+            switch (d % 10) {
+                case 1:  return "st";
+                case 2:  return "nd";
+                case 3:  return "rd";
+                default: return "th";
+            }
+        }
+        function timeInit(){
+            hour = date.getHours(); // 0 - 23
+            min = date.getMinutes(); // 0 - 59
+            sec = date.getSeconds(); // 0 - 59
+        }
+        function dateInit(){
+            day = date.getDay();
+            dateNo = date.getDate();
+            month = date.getMonth();
+            year = date.getFullYear();
+        }
+        function editTime(){
+            document.querySelector('#hour').innerHTML = doubleChar(hour);
+            document.querySelector('#min').innerHTML = doubleChar(min);
+            document.querySelector('#sec').innerHTML = doubleChar(sec);
+        }
+        function editDate() {
+            document.querySelector('#date').innerHTML = doubleChar(dateNo)+ nth(dateNo);
+            document.querySelector('#day').innerHTML = days[day] + ' ';
+            document.querySelector('#month').innerHTML = months[month] + ', ';
+            document.querySelector('#year').innerHTML = year;
+        }
+        function doubleChar(str){
+            return ("0" + str).slice(-2);
+        }
+        timeInit();
+        dateInit();
+        window.onload = () => {
+            editDate();
+            editTime();
+        }
+        let timer = setInterval(() => {
+            sec = parseInt(sec) + 1;
+            if(parseInt(sec) === 60){
+                sec = 0;
+                min = parseInt(min) + 1;
+            }
+            if(parseInt(min) === 60){
+                min = 0;
+                hour = parseInt(hour)+ 1;
+            }
+            if(parseInt(hour) == 24){
+                hour = 0;
+                dateInit();
+                editDate();
+            }
+            editTime();
+        }, 1000);
+
+    </script>
+</body>
+</html>
